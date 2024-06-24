@@ -37,7 +37,7 @@ const Snack = () => {
 
     return (
         <div>
-            <div className='w-100'>
+            <div className='w-100 mb-4'>
                 <Row gutter={[9, 9]}>
                     {snackList?.map((item, index) => (
                         <Col span={6} key={index}>

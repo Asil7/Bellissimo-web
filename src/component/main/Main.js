@@ -86,32 +86,32 @@ const Main = () => {
                 <div style={{ width: '60%' }}>
                     <div>
                         <div id="pitsa">
-                            <h4>Pitsa</h4>
+                            <h4><strong>Pitsa</strong></h4>
                             <Pizza />
                         </div>
 
                         <div id="gazaklar">
-                            <h4>Gazaklar</h4>
+                            <h4><strong>Gazaklar</strong></h4>
                             <Snack />
                         </div>
 
                         <div id="ichimliklar">
-                            <h4>Ichimliklar</h4>
+                            <h4><strong>Ichimliklar</strong></h4>
                             <Drink/>
                         </div>
 
                         <div id="salatlar">
-                            <h4>Salatlar</h4>
+                            <h4><strong>Salatlar</strong></h4>
                             <Salad/>
                         </div>
 
                         <div id='desertlar'>
-                            <h4>Desertlar</h4>
+                            <h4><strong>Desertlar</strong></h4>
                             <Dessert />
                         </div>
 
                         <div id="souslar">
-                            <h4>Souslar</h4>
+                            <h4><strong>Souslar</strong></h4>
                             <Sauce />
                         </div>
                         
