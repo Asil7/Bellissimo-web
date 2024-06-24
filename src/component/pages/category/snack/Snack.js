@@ -40,7 +40,7 @@ const Snack = () => {
             <div className='w-100 mb-4'>
                 <Row gutter={[9, 9]}>
                     {snackList?.map((item, index) => (
-                        <Col span={6} key={index}>
+                        <Col xs={24} sm={12} md={12} lg={6} xl={6} key={index}>
                             <div className='hoverable-card' onClick={() => showModal(item)}>
                                 <Card
                                     style={{ width: '100%', height: '440px' }}
