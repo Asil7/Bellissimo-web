@@ -1,0 +1,17 @@
+.hoverable-card {
+    transition: transform 0.3s ease;
+}
+
+.hoverable-card:hover {
+    transform: scale(1.02);
+}
+
+.ant-card .ant-card-body {
+    padding-left: 30px;
+    padding-top: 0;
+    border-radius: 0 0 8px 8px;
+}
+
+.text-muted {
+    line-height: 1;
+}
