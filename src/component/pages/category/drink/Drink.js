@@ -1,13 +1,12 @@
-import { Row, Col, Card, Button, Tag, Modal, Divider, Segmented } from 'antd';
+import { Row, Col, Card, Button, Tag, Modal } from 'antd';
 import React, { useEffect, useState } from 'react';
 import '../category.css';
-import { EditOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProductByCategory } from '../../../../store/actions/product/product';
 
 const Drink = () => {
     const dispatch = useDispatch();
-    const [selectedPizza, setSelectedPizza] = useState(null);
+    const [selectedDrink, setSelectedDrink] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const { drinkList } = useSelector((state) => state.product);
 
@@ -15,15 +14,8 @@ const Drink = () => {
         dispatch(getProductByCategory('DRINK'));
     }, [dispatch]);
 
-    const truncateText = (text, maxLength) => {
-        if (text.length > maxLength) {
-            return text.substring(0, maxLength) + '...';
-        }
-        return text;
-    };
-
     const showModal = (pizza) => {
-        setSelectedPizza(pizza);
+        setSelectedDrink(pizza);
         setIsModalVisible(true);
     };
 
@@ -35,6 +27,12 @@ const Drink = () => {
         setIsModalVisible(false);
     };
 
+    const modalStyles = {
+        mask: {
+            backdropFilter: 'blur(5px)',
+        },
+    };
+
     return (
         <div>
             <div className='w-100 mb-4'>
@@ -43,7 +41,7 @@ const Drink = () => {
                         <Col xs={24} sm={12} md={12} lg={6} xl={6} key={index}>
                             <div className='hoverable-card' onClick={() => showModal(item)}>
                                 <Card
-                                    style={{ width: '100%', height: '440px' }}
+                                    style={{ height: '380px' }}
                                     bordered={false}
                                     className='text-start shadow'
                                     cover={
@@ -53,9 +51,8 @@ const Drink = () => {
                                         />
                                     }
                                 >
-                                    <strong className='fs-5'>{item.name}</strong>
-                                    <div className='text-muted'>
-                                        {truncateText(item.description, 180)}
+                                    <div className='mt-2 fs-6'>
+                                        {item.name}
                                     </div>
                                     <div style={{ position: 'absolute', bottom: 20 }}>
                                         <Tag className='fs-6'><strong>{item.price} so'mdan</strong></Tag>
@@ -67,58 +64,28 @@ const Drink = () => {
                 </Row>
             </div>
 
-            {selectedPizza && (<Modal footer={null} open={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={900}>
+            {selectedDrink && (<Modal styles={modalStyles} centered footer={null} open={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={900}>
                 <Row gutter={16}>
                     <Col span={12}>
                         <div className='text-center'>
                             <img
-                                src={`data:${selectedPizza.attachment.contentType};base64,${selectedPizza.attachment.contentByte}`}
-                                alt={selectedPizza.name}
+                                src={`data:${selectedDrink.attachment.contentType};base64,${selectedDrink.attachment.contentByte}`}
+                                alt={selectedDrink.name}
                                 className='w-75 p-3'
                             />
                         </div>
-                        <strong className='fs-4'>{selectedPizza.name}</strong>
-                        <p className='text-muted'>{selectedPizza.description}</p>
-                        <Divider />
-                        <div><strong>Tanlangan bort: </strong></div>
-                        <div><strong>Masalliqlar: </strong></div>
-                        <div className='mt-4'>
-                            <strong className='fs-2'>{selectedPizza.price} so'm</strong>
-                        </div>
                     </Col>
-                    <Col span={12} >
-                        <div>
-                            <div className='text-start'>
-                                <strong className='fs-5'>Pitsa kattaligi</strong>
-                            </div>
-                            <Segmented
-                                size='large'
-                                options={['Kichkina', 'O`rtacha', 'Katta']}
-                                block
-                                className='mb-3'
-                            />
-                            <Row gutter={16}>
-                                <Col span={12}>
-                                    <Segmented
-                                        size='large'
-                                        options={['Yupqa', 'Qalin']}
-                                        block
-                                    />
-                                </Col>
-                                <Col span={12}>
-                                    <Button className='w-100 bg-warning text-black' size='large' shape="round" htmlType="submit" type="primary">
-                                        <EditOutlined /> Bo`rtni o`zgartirish
-                                    </Button>
-                                </Col>
-                            </Row>
-                            <div className='text-start mt-4'>
-                                <strong className='fs-5'>Masalliqlarni tanlang</strong>
-                            </div>
-                            <div className="text-center position-absolute bottom-0 w-100">
-                                <Button className=' bg-success w-100' size='large' shape="round" htmlType="submit" type="primary">
-                                    Savatga qo'shish
-                                </Button>
-                            </div>
+                    <Col span={12} className='mt-3'>
+                        <div className='mt-5'>
+                            <strong className='fs-3'>{selectedDrink.name}</strong>
+                        </div>
+                        <div className='fs-5 mt-1'>
+                            {selectedDrink.price} so'm
+                        </div>
+                        <div className="text-center position-absolute w-75 mt-5">
+                            <Button className='bg-success w-100' size='large' shape="round" htmlType="submit" type="primary">
+                                <strong>Savatga qo'shish</strong>
+                            </Button>
                         </div>
                     </Col>
                 </Row>
