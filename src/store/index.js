@@ -2,6 +2,7 @@ import { combineReducers } from "@reduxjs/toolkit";
 import { configureStore } from "@reduxjs/toolkit";
 import enums from "./slice/enums/enums";
 import product from "./slice/product/product";
+import cart from "./slice/cart/cart";
 
 export const throwMiddleware = () => (next) => (action) => {
     next(action);
@@ -10,7 +11,8 @@ export const throwMiddleware = () => (next) => (action) => {
 
 const reducer = combineReducers({
     enums,
-    product
+    product,
+    cart
 });
 
 export default configureStore({

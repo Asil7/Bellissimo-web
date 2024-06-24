@@ -10,6 +10,9 @@ import image from '../img/carouselImg/image.png'
 import image1 from '../img/carouselImg/image1.png'
 import image2 from '../img/carouselImg/image2.png'
 import ProductForm from '../pages/product/ProductForm';
+import { Link } from 'react-router-dom';
+import Footer from '../footer/Footer';
+
 
 const Main = () => {
     const [affixed, setAffixed] = useState(false);
@@ -78,8 +81,17 @@ const Main = () => {
                 </Affix>
             </div>
 
-            <Affix offsetTop={3}>
-                <div className='text-end'><Button type='primary' onClick={() => setIsModalOpen(true)}>Add Product</Button></div>
+            <Affix offsetTop={50}>
+                <Row justify="end" gutter={16}>
+                    <Col>
+                        <Button type='primary' onClick={() => setIsModalOpen(true)}>Add Product</Button>
+                    </Col>
+                    <Col>
+                        <Link to="/cart">
+                            <Button shape='round' type='primary'>Savatcha | 0 </Button>
+                        </Link>
+                    </Col>
+                </Row>
             </Affix>
 
             <div className='d-flex justify-content-center'>
@@ -97,12 +109,12 @@ const Main = () => {
 
                         <div id="ichimliklar">
                             <h4><strong>Ichimliklar</strong></h4>
-                            <Drink/>
+                            <Drink />
                         </div>
 
                         <div id="salatlar">
                             <h4><strong>Salatlar</strong></h4>
-                            <Salad/>
+                            <Salad />
                         </div>
 
                         <div id='desertlar'>
@@ -114,11 +126,12 @@ const Main = () => {
                             <h4><strong>Souslar</strong></h4>
                             <Sauce />
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
             <ProductForm isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+            <Footer/>
         </>
     )
 };

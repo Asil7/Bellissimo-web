@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, Select, Upload, notification } from 'antd';
+import { Button, Divider, Form, Input, Modal, Select, Upload, notification } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
 import { UploadOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
@@ -102,6 +102,9 @@ const ProductForm = ({ isModalOpen, setIsModalOpen }) => {
                                     )}
                                 />
                             </Form.Item>
+                            
+                            <Divider/>
+                            
                             {formVisible && <div>
                                 <Form.Item label="Name" labelAlign="left">
                                     <Controller

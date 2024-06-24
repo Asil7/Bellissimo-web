@@ -1,8 +1,9 @@
-import { Row, Col, Card, Button, Tag, Modal } from 'antd';
+import { Row, Col, Card, Button, Tag, Modal, notification } from 'antd';
 import React, { useEffect, useState } from 'react';
 import '../category.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProductByCategory } from '../../../../store/actions/product/product';
+import { addProductToCart } from '../../../../store/actions/cart/cart';
 
 const Drink = () => {
     const dispatch = useDispatch();
@@ -14,8 +15,8 @@ const Drink = () => {
         dispatch(getProductByCategory('DRINK'));
     }, [dispatch]);
 
-    const showModal = (pizza) => {
-        setSelectedDrink(pizza);
+    const showModal = (drink) => {
+        setSelectedDrink(drink);
         setIsModalVisible(true);
     };
 
@@ -33,6 +34,45 @@ const Drink = () => {
         },
     };
 
+    const handleAddProductToCart = async () => {
+        try {
+            const formData = new FormData();
+            formData.append('name', selectedDrink.name);
+            formData.append('price', selectedDrink.price);
+            if (selectedDrink.attachment) {
+                const file = dataURItoBlob(selectedDrink.attachment.contentByte, selectedDrink.attachment.contentType);
+                formData.append('attachment', file, selectedDrink.attachment.fileOriginalName);
+            }
+
+            let res = await dispatch(addProductToCart(formData));
+            if (res.payload.status === 200) {
+                // dispatch(fetchPizzaList());
+                notification.success({
+                    message: "Pizza successfully saved",
+                    duration: 8
+                });
+            } else {
+                notification.error({
+                    message: "Pizza don't saved",
+                    duration: 8
+                });
+            }
+        } catch (e) {
+        }
+    }
+
+    function dataURItoBlob(dataURI, contentType) {
+        const byteString = atob(dataURI);
+        const arrayBuffer = new ArrayBuffer(byteString.length);
+        const int8Array = new Uint8Array(arrayBuffer);
+        for (let i = 0; i < byteString.length; i++) {
+            int8Array[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([int8Array], { type: contentType });
+    }
+
+    console.log(selectedDrink);
+
     return (
         <div>
             <div className='w-100 mb-4'>
@@ -41,17 +81,20 @@ const Drink = () => {
                         <Col xs={24} sm={12} md={12} lg={6} xl={6} key={index}>
                             <div className='hoverable-card' onClick={() => showModal(item)}>
                                 <Card
-                                    style={{ height: '380px' }}
+                                    style={{ height: '350px' }}
                                     bordered={false}
                                     className='text-start shadow'
                                     cover={
-                                        <img
-                                            src={`data:${item.attachment.contentType};base64,${item.attachment.contentByte}`}
-                                            alt={item.name}
-                                        />
+                                        <div className="d-flex justify-content-center align-items-center overflow-hidden">
+                                            <img
+                                                src={`data:${item.attachment.contentType};base64,${item.attachment.contentByte}`}
+                                                alt={item.name}
+                                                style={{ height: '60%', width: '60%', objectFit: 'cover', marginTop: '50px'}}
+                                            />
+                                        </div>
                                     }
                                 >
-                                    <div className='mt-2 fs-6'>
+                                    <div className='mt-5 fs-6'>
                                         {item.name}
                                     </div>
                                     <div style={{ position: 'absolute', bottom: 20 }}>
@@ -83,7 +126,7 @@ const Drink = () => {
                             {selectedDrink.price} so'm
                         </div>
                         <div className="text-center position-absolute w-75 mt-5">
-                            <Button className='bg-success w-100' size='large' shape="round" htmlType="submit" type="primary">
+                            <Button onClick={() => handleAddProductToCart()} className='bg-success w-100' size='large' shape="round" htmlType="submit" type="primary">
                                 <strong>Savatga qo'shish</strong>
                             </Button>
                         </div>
