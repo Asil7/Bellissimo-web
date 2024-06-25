@@ -24,3 +24,15 @@ export const getProductByCart = createAsyncThunk(
         }
     }
 )
+
+export const getProductCountFromCart = createAsyncThunk(
+    'get/productCount',
+    async () => {
+        try {
+            const res = await axios.get(`http://localhost:8080/api/cart/count`);
+            return res
+        } catch (e) {
+            return e
+        }
+    }
+)

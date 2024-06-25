@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import '../category.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProductByCategory } from '../../../../store/actions/product/product';
-import { addProductToCart } from '../../../../store/actions/cart/cart';
+import { addProductToCart, getProductCountFromCart } from '../../../../store/actions/cart/cart';
 
 const Drink = () => {
     const dispatch = useDispatch();
@@ -56,10 +56,10 @@ const Drink = () => {
                         />
                     ),
                     message: <span className='ms-4 mt-1'><strong>{selectedDrink.name}</strong> savatga qo'shildi</span>,
-                    showProgress: true,
-                    duration: 5
+                    duration: 3
                 });
                 setIsModalVisible(false);
+                dispatch(getProductCountFromCart());
             } else {
                 notification.error({
                     message: <div> <strong>{selectedDrink.name}</strong>don't saved</div>,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Carousel, Anchor, Affix, Row, Col, Segmented, Tag, Button } from 'antd';
 import Pizza from '../pages/category/pizza/Pizza'
 import Snack from '../pages/category/snack/Snack'
@@ -12,18 +12,25 @@ import image2 from '../img/carouselImg/image2.png'
 import ProductForm from '../pages/product/ProductForm';
 import { Link } from 'react-router-dom';
 import Footer from '../footer/Footer';
+import { getProductCountFromCart } from '../../store/actions/cart/cart';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 const Main = () => {
+    const dispatch = useDispatch();
     const [affixed, setAffixed] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { productCount } = useSelector((state) => state.cart);
+
+    useEffect(() => {
+        dispatch(getProductCountFromCart());
+    }, [dispatch]);
 
     const handleAffixChange = (affixed) => {
         setAffixed(affixed);
     };
 
     const anchorClass = affixed ? 'anchor-affixed' : 'anchor';
-
 
     return (
         <>
@@ -88,7 +95,7 @@ const Main = () => {
                     </Col>
                     <Col>
                         <Link to="/cart">
-                            <Button shape='round' type='primary'>Savatcha | 0 </Button>
+                            <Button shape='round' className='bg-danger' type='primary'>Savatcha | {String(productCount)}</Button>
                         </Link>
                     </Col>
                 </Row>
