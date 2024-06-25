@@ -39,6 +39,7 @@ const Drink = () => {
             const formData = new FormData();
             formData.append('name', selectedDrink.name);
             formData.append('price', selectedDrink.price);
+            formData.append('quantity', 1);
             if (selectedDrink.attachment) {
                 const file = dataURItoBlob(selectedDrink.attachment.contentByte, selectedDrink.attachment.contentType);
                 formData.append('attachment', file, selectedDrink.attachment.fileOriginalName);
@@ -46,14 +47,22 @@ const Drink = () => {
 
             let res = await dispatch(addProductToCart(formData));
             if (res.payload.status === 200) {
-                // dispatch(fetchPizzaList());
                 notification.success({
-                    message: "Pizza successfully saved",
-                    duration: 8
+                    icon: (
+                        <img
+                            src={`data:${selectedDrink.attachment.contentType};base64,${selectedDrink.attachment.contentByte}`}
+                            alt={selectedDrink.name}
+                            style={{ width: 40, height: 40 }}
+                        />
+                    ),
+                    message: <span className='ms-4 mt-1'><strong>{selectedDrink.name}</strong> savatga qo'shildi</span>,
+                    showProgress: true,
+                    duration: 5
                 });
+                setIsModalVisible(false);
             } else {
                 notification.error({
-                    message: "Pizza don't saved",
+                    message: <div> <strong>{selectedDrink.name}</strong>don't saved</div>,
                     duration: 8
                 });
             }
@@ -71,8 +80,6 @@ const Drink = () => {
         return new Blob([int8Array], { type: contentType });
     }
 
-    console.log(selectedDrink);
-
     return (
         <div>
             <div className='w-100 mb-4'>
@@ -89,7 +96,7 @@ const Drink = () => {
                                             <img
                                                 src={`data:${item.attachment.contentType};base64,${item.attachment.contentByte}`}
                                                 alt={item.name}
-                                                style={{ height: '60%', width: '60%', objectFit: 'cover', marginTop: '50px'}}
+                                                style={{ height: '60%', width: '60%', objectFit: 'cover', marginTop: '50px' }}
                                             />
                                         </div>
                                     }
