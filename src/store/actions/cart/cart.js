@@ -36,3 +36,16 @@ export const getProductCountFromCart = createAsyncThunk(
         }
     }
 )
+
+export const updateQuantity = createAsyncThunk(
+    'update/quantity',
+    async (data) => {
+        const {url, id, quantity} = data;
+        try {
+            const res = await axios.put(`http://localhost:8080/api/cart/${url}/${id}/${quantity}`);
+            return res
+        } catch (e) {
+            return e
+        }
+    }
+)

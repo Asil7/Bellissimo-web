@@ -1,8 +1,9 @@
-import { Row, Col, Card, Button, Tag, Modal } from 'antd';
+import { Row, Col, Card, Button, Tag, Modal, notification } from 'antd';
 import React, { useEffect, useState } from 'react';
 import '../category.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProductByCategory } from '../../../../store/actions/product/product';
+import { addProductToCart, getProductCountFromCart } from '../../../../store/actions/cart/cart';
 
 const Salad = () => {
     const dispatch = useDispatch();
@@ -13,13 +14,6 @@ const Salad = () => {
     useEffect(() => {
         dispatch(getProductByCategory('SALAD'));
     }, [dispatch]);
-
-    const truncateText = (text, maxLength) => {
-        if (text.length > maxLength) {
-            return text.substring(0, maxLength) + '...';
-        }
-        return text;
-    };
 
     const showModal = (pizza) => {
         setSelectedSalad(pizza);
@@ -40,6 +34,53 @@ const Salad = () => {
         },
     };
 
+    const handleAddProductToCart = async () => {
+        try {
+            const formData = new FormData();
+            formData.append('name', selectedSalad.name);
+            formData.append('price', selectedSalad.price);
+            formData.append('quantity', 1);
+            if (selectedSalad.attachment) {
+                const file = dataURItoBlob(selectedSalad.attachment.contentByte, selectedSalad.attachment.contentType);
+                formData.append('attachment', file, selectedSalad.attachment.fileOriginalName);
+            }
+
+            let res = await dispatch(addProductToCart(formData));
+            if (res.payload.status === 200) {
+                notification.success({
+                    icon: (
+                        <img
+                            src={`data:${selectedSalad.attachment.contentType};base64,${selectedSalad.attachment.contentByte}`}
+                            alt={selectedSalad.name}
+                            style={{ width: 40, height: 40 }}
+                        />
+                    ),
+                    message: <span className='ms-4 mt-1'><strong>{selectedSalad.name}</strong> savatga qo'shildi</span>,
+                    duration: 3
+                });
+                setIsModalVisible(false);
+                dispatch(getProductCountFromCart());
+            } else {
+                notification.error({
+                    message: <div> <strong>{selectedSalad.name}</strong>don't saved</div>,
+                    duration: 8
+                });
+            }
+        } catch (e) {
+        }
+    }
+
+    function dataURItoBlob(dataURI, contentType) {
+        const byteString = atob(dataURI);
+        const arrayBuffer = new ArrayBuffer(byteString.length);
+        const int8Array = new Uint8Array(arrayBuffer);
+        for (let i = 0; i < byteString.length; i++) {
+            int8Array[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([int8Array], { type: contentType });
+    }
+
+
     return (
         <div>
             <div className='w-100 mb-4'>
@@ -59,9 +100,6 @@ const Salad = () => {
                                     }
                                 >
                                     <strong className='fs-5'>{item.name}</strong>
-                                    <div className='text-muted'>
-                                        {truncateText(item.description, 180)}
-                                    </div>
                                     <div style={{ position: 'absolute', bottom: 20 }}>
                                         <Tag className='fs-6'><strong>{item.price} so'mdan</strong></Tag>
                                     </div>
@@ -91,7 +129,7 @@ const Salad = () => {
                             {selectedSalad.price} so'm
                         </div>
                         <div className="text-center position-absolute w-75 mt-5">
-                            <Button className='bg-success w-100' size='large' shape="round" htmlType="submit" type="primary">
+                            <Button onClick={() => handleAddProductToCart()} className='bg-success w-100' size='large' shape="round" htmlType="submit" type="primary">
                                 <strong>Savatga qo'shish</strong>
                             </Button>
                         </div>
