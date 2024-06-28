@@ -38,23 +38,26 @@ const Pizza = () => {
     return (
         <div>
             <div className='w-100 mb-4'>
-                <Row gutter={[9, 9]}>
+                <Row gutter={[16, 16]}>
                     {pizzaList?.map((item, index) => (
                         <Col xs={24} sm={12} md={12} lg={6} xl={6} key={index}>
                             <div className='hoverable-card' onClick={() => showModal(item)}>
                                 <Card
-                                    style={{ width: '100%', height: '440px' }}
+                                    style={{ width: '100%', height: '425px' }}
                                     bordered={false}
-                                    className='text-start shadow'
+                                    className='text-start'
                                     cover={
-                                        <img
-                                            src={`data:${item.attachment.contentType};base64,${item.attachment.contentByte}`}
-                                            alt={item.name}
-                                        />
+                                        <div className="d-flex justify-content-center align-items-center overflow-hidden">
+                                            <img
+                                                src={`data:${item.attachment.contentType};base64,${item.attachment.contentByte}`}
+                                                alt={item.name}
+                                                style={{ height: '80%', width: '80%', objectFit: 'cover', marginTop: '30px' }}
+                                            />
+                                        </div>
                                     }
                                 >
-                                    <strong className='fs-5'>{item.name}</strong>
-                                    <div className='text-muted'>
+                                    <div className='fs-6'>{item.name}</div>
+                                    <div className='text-muted mt-1'>
                                         {truncateText(item.description, 180)}
                                     </div>
                                     <div style={{ position: 'absolute', bottom: 20 }}>

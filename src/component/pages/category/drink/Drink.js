@@ -83,14 +83,14 @@ const Drink = () => {
     return (
         <div>
             <div className='w-100 mb-4'>
-                <Row gutter={[9, 9]}>
+                <Row gutter={[16, 16]}>
                     {drinkList?.map((item, index) => (
                         <Col xs={24} sm={12} md={12} lg={6} xl={6} key={index}>
                             <div className='hoverable-card' onClick={() => showModal(item)}>
                                 <Card
                                     style={{ height: '350px' }}
                                     bordered={false}
-                                    className='text-start shadow'
+                                    className='text-start'
                                     cover={
                                         <div className="d-flex justify-content-center align-items-center overflow-hidden">
                                             <img

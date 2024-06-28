@@ -4,6 +4,7 @@ import '../category.css';
 import { EditOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProductByCategory } from '../../../../store/actions/product/product';
+import Item from 'antd/es/list/Item';
 
 const Snack = () => {
     const dispatch = useDispatch();
@@ -38,27 +39,30 @@ const Snack = () => {
     return (
         <div>
             <div className='w-100 mb-4'>
-                <Row gutter={[9, 9]}>
+                <Row gutter={[16, 16]}>
                     {snackList?.map((item, index) => (
                         <Col xs={24} sm={12} md={12} lg={6} xl={6} key={index}>
                             <div className='hoverable-card' onClick={() => showModal(item)}>
                                 <Card
-                                    style={{ width: '100%', height: '440px' }}
+                                    style={{ width: '100%', height: '380px' }}
                                     bordered={false}
-                                    className='text-start shadow'
+                                    className='text-start'
                                     cover={
-                                        <img
-                                            src={`data:${item.attachment.contentType};base64,${item.attachment.contentByte}`}
-                                            alt={item.name}
-                                        />
+                                        <div className="d-flex justify-content-center align-items-center overflow-hidden">
+                                            <img
+                                                src={`data:${item.attachment.contentType};base64,${item.attachment.contentByte}`}
+                                                alt={item.name}
+                                                style={{ height: '75%', width: '75%', objectFit: 'cover', marginTop: '30px' }}
+                                            />
+                                        </div>
                                     }
                                 >
-                                    <strong className='fs-5'>{item.name}</strong>
-                                    <div className='text-muted'>
+                                    <div className='fs-6'>{item.name}</div>
+                                    {Item.description !== null && <div className='text-muted mt-1'>
                                         {truncateText(item.description, 180)}
-                                    </div>
+                                    </div>}
                                     <div style={{ position: 'absolute', bottom: 20 }}>
-                                        <Tag className='fs-6'><strong>{item.price} so'mdan</strong></Tag>
+                                        <Tag className='fs-6'><strong>{item.price} so'm</strong></Tag>
                                     </div>
                                 </Card>
                             </div>

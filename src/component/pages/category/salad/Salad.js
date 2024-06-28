@@ -84,24 +84,28 @@ const Salad = () => {
     return (
         <div>
             <div className='w-100 mb-4'>
-                <Row gutter={[9, 9]}>
+                <Row gutter={[16, 16]}>
                     {saladList?.map((item, index) => (
                         <Col xs={24} sm={12} md={12} lg={6} xl={6} key={index}>
                             <div className='hoverable-card' onClick={() => showModal(item)}>
                                 <Card
-                                    style={{ width: '100%', height: '440px' }}
+                                    style={{ width: '100%', height: '350px' }}
                                     bordered={false}
-                                    className='text-start shadow'
+                                    className='text-start'
                                     cover={
-                                        <img
-                                            src={`data:${item.attachment.contentType};base64,${item.attachment.contentByte}`}
-                                            alt={item.name}
-                                        />
+                                        <div className="d-flex justify-content-center align-items-center overflow-hidden">
+                                            <img
+                                                src={`data:${item.attachment.contentType};base64,${item.attachment.contentByte}`}
+                                                alt={item.name}
+                                                style={{ height: '75%', width: '75%', objectFit: 'cover', marginTop: '50px' }}
+                                            />
+                                        </div>
                                     }
                                 >
-                                    <strong className='fs-5'>{item.name}</strong>
+                                    <div className='mt-2 fs-6'> {item.name}
+                                    </div>
                                     <div style={{ position: 'absolute', bottom: 20 }}>
-                                        <Tag className='fs-6'><strong>{item.price} so'mdan</strong></Tag>
+                                        <Tag className='fs-6'><strong>{item.price} so'm</strong></Tag>
                                     </div>
                                 </Card>
                             </div>

@@ -14,12 +14,6 @@ const Sauce = () => {
         dispatch(getProductByCategory('SAUCE'));
     }, [dispatch]);
 
-    const truncateText = (text, maxLength) => {
-        if (text.length > maxLength) {
-            return text.substring(0, maxLength) + '...';
-        }
-        return text;
-    };
 
     const showModal = (pizza) => {
         setSelectedSauce(pizza);
@@ -43,25 +37,25 @@ const Sauce = () => {
     return (
         <div>
             <div className='w-100 mb-4'>
-                <Row gutter={[9, 9]}>
+                <Row gutter={[16, 16]}>
                     {sauceList?.map((item, index) => (
                         <Col xs={24} sm={12} md={12} lg={6} xl={6} key={index}>
                             <div className='hoverable-card' onClick={() => showModal(item)}>
                                 <Card
-                                    style={{ width: '100%', height: '440px' }}
+                                    style={{ width: '100%', height: '320px' }}
                                     bordered={false}
-                                    className='text-start shadow'
+                                    className='text-start'
                                     cover={
-                                        <img
-                                            src={`data:${item.attachment.contentType};base64,${item.attachment.contentByte}`}
-                                            alt={item.name}
-                                        />
+                                        <div className="d-flex justify-content-center align-items-center overflow-hidden">
+                                            <img
+                                                src={`data:${item.attachment.contentType};base64,${item.attachment.contentByte}`}
+                                                alt={item.name}
+                                                style={{ height: '75%', width: '75%', objectFit: 'cover', marginTop: '30px' }}
+                                            />
+                                        </div>
                                     }
                                 >
-                                    <strong className='fs-5'>{item.name}</strong>
-                                    <div className='text-muted'>
-                                        {truncateText(item.description, 180)}
-                                    </div>
+                                    <div className='fs-6 mt-1'>{item.name}</div>
                                     <div style={{ position: 'absolute', bottom: 20 }}>
                                         <Tag className='fs-6'><strong>{item.price} so'mdan</strong></Tag>
                                     </div>
