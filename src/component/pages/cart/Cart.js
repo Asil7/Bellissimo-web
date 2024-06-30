@@ -75,15 +75,15 @@ const Cart = () => {
                     {cartProductList?.map((item, index) => (
                         <Card key={index} style={{ padding: 10, width: '100%', height: '120px' }}>
                             <Row align="middle">
-                                <Col span={6}>
+                                <Col span={4}>
                                     <img
                                         src={`data:${item.attachment.contentType};base64,${item.attachment.contentByte}`}
                                         alt={item.name}
-                                        style={{ height: '60%', width: '60%', objectFit: 'cover' }}
+                                        style={{ height: '90%', width: '90%', objectFit: 'cover' }}
                                     />
                                 </Col>
                                 <Col span={12}>
-                                    <Text>{item.name}</Text>
+                                    <div>{item.name}</div>
                                 </Col>
                                 <Col span={6} style={{ textAlign: 'right' }}>
                                     <div className='mb-2'>

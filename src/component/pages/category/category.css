@@ -12,6 +12,14 @@
     border-radius: 0 0 8px 8px;
 }
 
-.text-muted {
+.text-secondary {
     line-height: 1;
+}
+
+.line-height {
+    line-height: 1.4;
+}
+
+.ant-divider-horizontal {
+    margin: 12px 0;
 }

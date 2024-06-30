@@ -1,14 +1,13 @@
-import { Row, Col, Card, Button, Tag, Modal, Divider, Segmented } from 'antd';
+import { Row, Col, Card, Button, Tag, Modal, notification } from 'antd';
 import React, { useEffect, useState } from 'react';
 import '../category.css';
-import { EditOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProductByCategory } from '../../../../store/actions/product/product';
-import Item from 'antd/es/list/Item';
+import { addProductToCart, getProductCountFromCart } from '../../../../store/actions/cart/cart';
 
 const Snack = () => {
     const dispatch = useDispatch();
-    const [selectedPizza, setSelectedPizza] = useState(null);
+    const [selectedSnack, setSelectedSnack] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const { snackList } = useSelector((state) => state.product);
 
@@ -24,7 +23,7 @@ const Snack = () => {
     };
 
     const showModal = (pizza) => {
-        setSelectedPizza(pizza);
+        setSelectedSnack(pizza);
         setIsModalVisible(true);
     };
 
@@ -35,6 +34,58 @@ const Snack = () => {
     const handleCancel = () => {
         setIsModalVisible(false);
     };
+
+    const modalStyles = {
+        mask: {
+            backdropFilter: 'blur(5px)',
+        },
+    };
+
+    const handleAddProductToCart = async () => {
+        try {
+            const formData = new FormData();
+            formData.append('name', selectedSnack.name);
+            formData.append('price', selectedSnack.price);
+            formData.append('quantity', 1);
+            if (selectedSnack.attachment) {
+                const file = dataURItoBlob(selectedSnack.attachment.contentByte, selectedSnack.attachment.contentType);
+                formData.append('attachment', file, selectedSnack.attachment.fileOriginalName);
+            }
+
+            let res = await dispatch(addProductToCart(formData));
+            if (res.payload.status === 200) {
+                notification.success({
+                    icon: (
+                        <img
+                            src={`data:${selectedSnack.attachment.contentType};base64,${selectedSnack.attachment.contentByte}`}
+                            alt={selectedSnack.name}
+                            style={{ width: 40, height: 40 }}
+                        />
+                    ),
+                    message: <span className='ms-4 mt-1'><strong>{selectedSnack.name}</strong> savatga qo'shildi</span>,
+                    duration: 3
+                });
+                setIsModalVisible(false);
+                dispatch(getProductCountFromCart());
+            } else {
+                notification.error({
+                    message: <div> <strong>{selectedSnack.name}</strong>don't saved</div>,
+                    duration: 8
+                });
+            }
+        } catch (e) {
+        }
+    }
+
+    function dataURItoBlob(dataURI, contentType) {
+        const byteString = atob(dataURI);
+        const arrayBuffer = new ArrayBuffer(byteString.length);
+        const int8Array = new Uint8Array(arrayBuffer);
+        for (let i = 0; i < byteString.length; i++) {
+            int8Array[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([int8Array], { type: contentType });
+    }
 
     return (
         <div>
@@ -58,7 +109,7 @@ const Snack = () => {
                                     }
                                 >
                                     <div className='fs-6'>{item.name}</div>
-                                    {Item.description !== null && <div className='text-muted mt-1'>
+                                    {item.description !== null && <div className='text-secondary mt-1'>
                                         {truncateText(item.description, 180)}
                                     </div>}
                                     <div style={{ position: 'absolute', bottom: 20 }}>
@@ -71,58 +122,31 @@ const Snack = () => {
                 </Row>
             </div>
 
-            {selectedPizza && (<Modal footer={null} open={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={900}>
+            {selectedSnack && (<Modal styles={modalStyles} centered footer={null} open={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={900}>
                 <Row gutter={16}>
                     <Col span={12}>
                         <div className='text-center'>
                             <img
-                                src={`data:${selectedPizza.attachment.contentType};base64,${selectedPizza.attachment.contentByte}`}
-                                alt={selectedPizza.name}
+                                src={`data:${selectedSnack.attachment.contentType};base64,${selectedSnack.attachment.contentByte}`}
+                                alt={selectedSnack.name}
                                 className='w-75 p-3'
                             />
                         </div>
-                        <strong className='fs-4'>{selectedPizza.name}</strong>
-                        <p className='text-muted'>{selectedPizza.description}</p>
-                        <Divider />
-                        <div><strong>Tanlangan bort: </strong></div>
-                        <div><strong>Masalliqlar: </strong></div>
-                        <div className='mt-4'>
-                            <strong className='fs-2'>{selectedPizza.price} so'm</strong>
-                        </div>
                     </Col>
-                    <Col span={12} >
-                        <div>
-                            <div className='text-start'>
-                                <strong className='fs-5'>Pitsa kattaligi</strong>
-                            </div>
-                            <Segmented
-                                size='large'
-                                options={['Kichkina', 'O`rtacha', 'Katta']}
-                                block
-                                className='mb-3'
-                            />
-                            <Row gutter={16}>
-                                <Col span={12}>
-                                    <Segmented
-                                        size='large'
-                                        options={['Yupqa', 'Qalin']}
-                                        block
-                                    />
-                                </Col>
-                                <Col span={12}>
-                                    <Button className='w-100 bg-warning text-black' size='large' shape="round" htmlType="submit" type="primary">
-                                        <EditOutlined /> Bo`rtni o`zgartirish
-                                    </Button>
-                                </Col>
-                            </Row>
-                            <div className='text-start mt-4'>
-                                <strong className='fs-5'>Masalliqlarni tanlang</strong>
-                            </div>
-                            <div className="text-center position-absolute bottom-0 w-100">
-                                <Button className=' bg-success w-100' size='large' shape="round" htmlType="submit" type="primary">
-                                    Savatga qo'shish
-                                </Button>
-                            </div>
+                    <Col span={12} className='mt-3'>
+                        <div className='mt-5'>
+                            <strong className='fs-3'>{selectedSnack.name}</strong>
+                        </div>
+                       {selectedSnack.description !== null && <div className='text-secondary line-height fs-6'>
+                            {selectedSnack.description}
+                        </div>}
+                        <div className='fs-5 mt-2'>
+                            {selectedSnack.price} so'm
+                        </div>
+                        <div className="text-center position-absolute w-75 mt-5">
+                            <Button onClick={() => handleAddProductToCart()} className='bg-success w-100' size='large' shape="round" htmlType="submit" type="primary">
+                                <strong>Savatga qo'shish</strong>
+                            </Button>
                         </div>
                     </Col>
                 </Row>

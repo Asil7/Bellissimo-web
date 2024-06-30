@@ -1,8 +1,9 @@
-import { Row, Col, Card, Button, Tag, Modal } from 'antd';
+import { Row, Col, Card, Button, Tag, Modal, notification } from 'antd';
 import React, { useEffect, useState } from 'react';
 import '../category.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProductByCategory } from '../../../../store/actions/product/product';
+import { addProductToCart, getProductCountFromCart } from '../../../../store/actions/cart/cart';
 
 const Dessert = () => {
     const dispatch = useDispatch();
@@ -32,6 +33,52 @@ const Dessert = () => {
             backdropFilter: 'blur(5px)',
         },
     };
+
+    const handleAddProductToCart = async () => {
+        try {
+            const formData = new FormData();
+            formData.append('name', selectedDessert.name);
+            formData.append('price', selectedDessert.price);
+            formData.append('quantity', 1);
+            if (selectedDessert.attachment) {
+                const file = dataURItoBlob(selectedDessert.attachment.contentByte, selectedDessert.attachment.contentType);
+                formData.append('attachment', file, selectedDessert.attachment.fileOriginalName);
+            }
+
+            let res = await dispatch(addProductToCart(formData));
+            if (res.payload.status === 200) {
+                notification.success({
+                    icon: (
+                        <img
+                            src={`data:${selectedDessert.attachment.contentType};base64,${selectedDessert.attachment.contentByte}`}
+                            alt={selectedDessert.name}
+                            style={{ width: 40, height: 40 }}
+                        />
+                    ),
+                    message: <span className='ms-4 mt-1'><strong>{selectedDessert.name}</strong> savatga qo'shildi</span>,
+                    duration: 3
+                });
+                setIsModalVisible(false);
+                dispatch(getProductCountFromCart());
+            } else {
+                notification.error({
+                    message: <div> <strong>{selectedDessert.name}</strong>don't saved</div>,
+                    duration: 8
+                });
+            }
+        } catch (e) {
+        }
+    }
+
+    function dataURItoBlob(dataURI, contentType) {
+        const byteString = atob(dataURI);
+        const arrayBuffer = new ArrayBuffer(byteString.length);
+        const int8Array = new Uint8Array(arrayBuffer);
+        for (let i = 0; i < byteString.length; i++) {
+            int8Array[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([int8Array], { type: contentType });
+    }
 
     return (
         <div>
@@ -84,7 +131,7 @@ const Dessert = () => {
                             {selectedDessert.price} so'm
                         </div>
                         <div className="text-center position-absolute w-75 mt-5">
-                            <Button className='bg-success w-100' size='large' shape="round" htmlType="submit" type="primary">
+                            <Button onClick={() => handleAddProductToCart()} className='bg-success w-100' size='large' shape="round" htmlType="submit" type="primary">
                                 <strong>Savatga qo'shish</strong>
                             </Button>
                         </div>
