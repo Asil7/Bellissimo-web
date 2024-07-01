@@ -1,4 +1,4 @@
-import { Row, Col, Card, Button, Tag, Modal, Divider, Segmented, notification } from 'antd';
+import { Row, Col, Card, Button, Tag, Modal, Divider, Segmented, notification, Dropdown, Menu } from 'antd';
 import React, { useEffect, useState } from 'react';
 import '../category.css';
 import { EditOutlined } from '@ant-design/icons';
@@ -98,6 +98,28 @@ const Pizza = () => {
         }
     }, [selectedSize]);
 
+    const menu = (
+        <Menu
+            items={[
+                {
+                    label: <a href="https://www.antgroup.com">1st menu item</a>,
+                    key: '0',
+                },
+                {
+                    label: <a href="https://www.aliyun.com">2nd menu item</a>,
+                    key: '1',
+                },
+                {
+                    type: 'divider',
+                },
+                {
+                    label: '3rd menu item',
+                    key: '3',
+                },
+            ]}
+        />
+    );
+
     return (
         <div>
             <div className='w-100 mb-4'>
@@ -133,65 +155,69 @@ const Pizza = () => {
                 </Row>
             </div>
 
-            {selectedPizza && (<Modal footer={null} open={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={900}>
-                <Row gutter={16}>
-                    <Col span={12}>
-                        <div className='text-center mt-4'>
-                            <img
-                                src={`data:${selectedPizza.attachment.contentType};base64,${selectedPizza.attachment.contentByte}`}
-                                alt={selectedPizza.name}
-                                className='w-50 '
-                            />
-                        </div>
-                        <div className='mt-4'>
-                            <strong className='fs-4'>{selectedPizza.name}</strong>
-                        </div>
-                        <div className='text-secondary fs-6 mt-2'>{selectedPizza.description}</div>
-                        <Divider />
-                        <div><strong>Tanlangan bort: </strong></div>
-                        <div className='mt-2'><strong>Masalliqlar: </strong></div>
-                        <div className='mt-5'>
-                            <strong className='fs-2'>{selectedPizza.price} so'm</strong>
-                        </div>
-                    </Col>
-                    <Col span={12} >
-                        <div>
-                            <div className='text-start mt-4'>
-                                <strong className='fs-5'>Pitsa kattaligi</strong>
+            {selectedPizza && (
+                <Modal footer={null} open={isModalVisible} onOk={handleOk} onCancel={handleCancel} width={900}>
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <div className='text-center mt-4'>
+                                <img
+                                    src={`data:${selectedPizza.attachment.contentType};base64,${selectedPizza.attachment.contentByte}`}
+                                    alt={selectedPizza.name}
+                                    className='w-50 '
+                                />
                             </div>
-                            <Segmented
-                                size='large'
-                                options={['Kichkina', 'O`rtacha', 'Katta']}
-                                block
-                                className='mb-3 mt-3'
-                                onChange={handleChangeSize}
-                            />
-                            <Row gutter={16}>
-                                <Col span={12}>
-                                    <Segmented
-                                        size='large'
-                                        options={thickness}
-                                        block
-                                    />
-                                </Col>
-                                <Col span={12}>
-                                    <Button className='w-100 bg-warning text-black' size='large' shape="round" htmlType="submit" type="primary">
-                                        <EditOutlined /> Bo`rtni o`zgartirish
+                            <div className='mt-4'>
+                                <strong className='fs-4'>{selectedPizza.name}</strong>
+                            </div>
+                            <div className='text-secondary fs-6 mt-2'>{selectedPizza.description}</div>
+                            <Divider />
+                            <div><strong>Tanlangan bort: </strong></div>
+                            <div className='mt-2'><strong>Masalliqlar: </strong></div>
+                            <div className='mt-5'>
+                                <strong className='fs-2'>{selectedPizza.price} so'm</strong>
+                            </div>
+                        </Col>
+                        <Col span={12}>
+                            <div>
+                                <div className='text-start mt-4'>
+                                    <strong className='fs-5'>Pitsa kattaligi</strong>
+                                </div>
+                                <Segmented
+                                    size='large'
+                                    options={['Kichkina', 'O`rtacha', 'Katta']}
+                                    block
+                                    className='mb-3 mt-3'
+                                    onChange={handleChangeSize}
+                                />
+                                <Row gutter={16}>
+                                    <Col span={12}>
+                                        <Segmented
+                                            size='large'
+                                            options={thickness}
+                                            block
+                                        />
+                                    </Col>
+                                    <Col span={12}>
+                                        <Dropdown overlay={menu} trigger={['click']}>
+                                            <Button className='w-100 bg-warning text-black' size='large' shape="round" htmlType="submit" type="primary">
+                                                <EditOutlined /> Bo`rtni o`zgartirish
+                                            </Button>
+                                        </Dropdown>
+                                    </Col>
+                                </Row>
+                                <div className='text-start mt-4'>
+                                    <strong className='fs-5'>Masalliqlarni tanlang</strong>
+                                </div>
+                                <div className="text-center position-absolute bottom-0 w-100">
+                                    <Button onClick={() => handleAddProductToCart()} className=' bg-success w-100' size='large' shape="round" htmlType="submit" type="primary">
+                                        Savatga qo'shish
                                     </Button>
-                                </Col>
-                            </Row>
-                            <div className='text-start mt-4'>
-                                <strong className='fs-5'>Masalliqlarni tanlang</strong>
+                                </div>
                             </div>
-                            <div className="text-center position-absolute bottom-0 w-100">
-                                <Button onClick={() => handleAddProductToCart()} className=' bg-success w-100' size='large' shape="round" htmlType="submit" type="primary">
-                                    Savatga qo'shish
-                                </Button>
-                            </div>
-                        </div>
-                    </Col>
-                </Row>
-            </Modal>)}
+                        </Col>
+                    </Row>
+                </Modal>
+            )}
         </div>
     );
 };
